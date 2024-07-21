@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import { UserRouter } from "../server/routes/User.js";
+import { UserRouter } from "./routes/user.js";
 import { AdminRouter } from "./routes/Admin.js";
 import { ModulesRouterHTML } from "./routes/ModulesHTML.js";
 import { ModulesRouterCSS } from "./routes/ModulesCSS.js";
