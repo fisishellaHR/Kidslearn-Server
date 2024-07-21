@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User.js";
+import { User } from "../../../models/User.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
