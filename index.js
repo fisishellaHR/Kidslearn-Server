@@ -21,12 +21,12 @@ app.use(
   })
 );
 app.use(cookieParser());
-mongoose.connect("mongodb://127.0.0.1:27017/authentication");
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
 app.use("/auth", UserRouter);
 app.use("/auth/:id", UserRouter);
 app.use("/admin", AdminRouter);
 app.use("/module", ModulesRouterHTML);
 app.use("/moduledua", ModulesRouterCSS);
+mongoose.connect("mongodb://127.0.0.1:27017/authentication");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
