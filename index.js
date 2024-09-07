@@ -36,8 +36,8 @@ app.use("/api/auth/:id", UserRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/module", ModulesRouterHTML);
 app.use("/api/moduledua", ModulesRouterCSS);
-app.use("/questions/html", routerHTML); // Rute untuk QuizHTML
-app.use("/questions/css", routerCSS); // Rute untuk QuizCSS
+app.use("api/questions/html", routerHTML); // Rute untuk QuizHTML
+app.use("api/questions/css", routerCSS); // Rute untuk QuizCSS
 mongoose.connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to MongoDB");
