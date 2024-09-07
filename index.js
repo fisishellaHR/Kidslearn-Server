@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import routerHTML from "./routes/quizHTMLRoutes.js";
+import routerCSS from "./routes/quizCSSRoutes.js";
 import { UserRouter } from "./routes/var/task/user.js";
 import { AdminRouter } from "./routes/Admin.js";
 import { ModulesRouterHTML } from "./routes/ModulesHTML.js";
@@ -34,8 +36,9 @@ app.use("/api/auth/:id", UserRouter);
 app.use("/api/admin", AdminRouter);
 app.use("/api/module", ModulesRouterHTML);
 app.use("/api/moduledua", ModulesRouterCSS);
-mongoose
-  .connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true })
+app.use("/questions/html", routerHTML); // Rute untuk QuizHTML
+app.use("/questions/css", routerCSS); // Rute untuk QuizCSS
+mongoose.connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(process.env.PORT, () => {
