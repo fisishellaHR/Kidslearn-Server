@@ -114,6 +114,19 @@ router.get("/quiz/:quizId", async (req, res) => {
   }
 });
 
+router.get("/one/quiz", async (req, res) => {
+  try {
+    const quizId = await QuizCSSModel.findOne();
+
+    if (!quizId) {
+      res.status(404).json({ message: "Empty Quiz Module!" });
+    }
+    res.status(200).json(quizId);
+  } catch (error) {
+    res.status(500).json({ ErrorMessage: error.message });
+  }
+});
+
 router.delete("/quiz/:quizId", async (req, res) => {
   const { quizId } = req.params;
   try {

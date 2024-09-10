@@ -172,6 +172,19 @@ router.get("/:quizId", async (req, res) => {
   }
 });
 
+router.get("/one/quiz", async (req, res) =>{
+  try {
+    const quizId = await QuizHTMLModel.findOne()
+    
+    if(!quizId){
+      res.status(404).json({ message : 'Empty Quiz Module!' })
+    }
+    res.status(200).json(quizId);
+  } catch (error) {
+    res.status(500).json({ ErrorMessage : error.message })
+  }
+})
+
 // Route untuk menghapus kuis berdasarkan ID
 router.delete("/quiz/:quizId", async (req, res) => {
   const { quizId } = req.params;
