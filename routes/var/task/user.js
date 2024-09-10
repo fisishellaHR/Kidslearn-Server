@@ -6,6 +6,8 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
 import { Types } from "mongoose";
+import ScoreQuizModel from "../../../models/ScoreQuizModel.js";
+import QuizHTMLModel from "../../../models/quizModel.js";
 const { ObjectId } = Types;
 dotenv.config();
 
@@ -249,37 +251,88 @@ router.post("/addsuggestion", async (req, res) => {
 });
 
 router.post("/submitresult", async (req, res) => {
-  const { score, percobaan, judul, email } = req.body;
+  const { email, quizId, userAnswers } = req.body;
+  // score, percobaan, judul, email;
   const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  const scoreUser = await ScoreQuizModel.findOne({ user: user._id })
+  const quiz = await QuizHTMLModel.findOne({ _id: quizId })
+  if (!quiz) {
+    return res.status(404).json({ message: "Quiz Not Found!" })
   }
+  if (!user) {
+    return res.status(404).json({ message: "User Not Found1" });
+  }
+  
   try {
-    if (!user.quiz) {
-      user.quiz = [];
+    // if student have not registered yet quiz
+    if (!scoreUser) {
+      // then create new Quiz Model for the new user that not registered 
+      const scoreQuiz = new ScoreQuizModel({
+        user: user._id,
+        quiz: quizId,
+      });
+
+      await scoreQuiz.save();
     }
-    user.quiz.push({
-      percobaan: user.quiz.length + 1,
-      judul: judul,
-      score: score,
+
+    if (!scoreUser.answers) {
+      user.answers = [];
+    }
+    scoreUser.answers.push({
+      // questionId: quizId,
+      answer: userAnswers,
+      experiment: scoreUser.quiz.length + 1,
+      // passGrade: passed,
+      // score: percentageScore,
     });
     await user.save();
     return res
       .status(200)
       .json({ status: true, message: "Quiz submitted successfully" });
   } catch (error) {
-    return res.status(400).json({ message: "server error" });
+    return res.status(400).json({ message: `${error.message}` });
   }
 });
 
 router.get("/getUsers", async (req, res) => {
   try {
-    const users = await User.find();
-    return res.json(users);
+    const users = await ScoreQuizModel.find()
+      .populate("user", "username email")
+      .populate("quiz", "title passGrade");
+
+    const result = users.map((userRecord) => {
+      return {
+        userId: userRecord.user._id,
+        userName: userRecord.user.username,
+        userEmail: userRecord.user.email,
+        title: userRecord.quiz.title,
+        passGrade: userRecord.quiz.passGrade,
+        historyAnswer: userRecord.answers.map((quizItem) => {
+          return{
+            questionId : quizItem.questionId,
+            answer : quizItem.answer
+          }
+        }),
+        experiment : userRecord.experiment,
+        score : userRecord.score
+        //   const passed = quizItem.score >= userRecord.quiz.passGrade;
+        //   return {
+        //     _id: quizItem._id,
+        //     experiment: quizItem.experiment,
+        //     score: quizItem.score,
+        //     StatusPassed: passed
+        //       ? `Congratulations! You passed the quiz.`
+        //       : `You didn't pass. Try again..`,
+        //   };
+      };
+    });
+
+    return res.json(result);
   } catch (error) {
-    return res.status(400).json({ message: "server error" });
+    return res.status(400).json({ message: `${error.message}` });
   }
 });
+
 
 router.delete("/deleteUser/:id", async (req, res) => {
   try {
@@ -302,19 +355,68 @@ router.get("/getUser", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    return res.json(users);
+    return res.json(user);
   } catch (error) {
     console.log(error);
   }
 });
 
-router.get("/getUserByUsername", async (req, res) => {
-  const { username } = req.query;
+router.get("/getUserById", async (req, res) => {
+  const { userId } = req.query; // --> change from username to userId
   try {
-    const user = await User.findOne({ username });
+    const user = 
+    await ScoreQuizModel.findOne({ user : userId })
+    .populate('user', 'username email')
+    .populate('quiz', 'title passGrade');
+
+    // const quiz = await ScoreQuizModel.find({ user: userId });
     if (user) {
-      res.json(user);
-    } else {
+      res.json({
+        email : user.user.email,
+        username : user.user.username,
+        answers : user.answers,
+        quiz : user.quiz.title,
+        score : user.score,
+        experiment : user.experiment,
+      }); 
+    } 
+    else if(!user){
+      const personal = await User.findOne({ _id : userId })
+      res.json(user)
+    }
+    else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+router.get("/getUserByUsername", async (req, res) => {
+  const { username } = req.query; // --> change from username to userId
+  try {
+    const user = 
+    await ScoreQuizModel.findOne({ username : username })
+    .populate('user', 'username email')
+    .populate('quiz', 'title passGrade');
+
+    // const quiz = await ScoreQuizModel.find({ user: userId });
+    if (user) {
+      res.json({
+        email : user.user.email,
+        username : user.user.username,
+        answers : user.answers,
+        quiz : user.quiz.title,
+        score : user.score,
+        experiment : user.experiment,
+      }); 
+    } 
+    else if(!user){
+      const personal = await User.findOne({ username : username })
+      res.json(personal)
+    }
+    else {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {

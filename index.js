@@ -16,6 +16,11 @@ dotenv.config({ path: "./config/.env" });
 app.use(
   cors({
     origin: "https://kidslearn-client.vercel.app",
+    // origin: [
+    //   "http://localhost:5173",
+    //   "http://127.0.0.1:5173",
+    //   "https://kidslearn-client.vercel.app",
+    // ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,

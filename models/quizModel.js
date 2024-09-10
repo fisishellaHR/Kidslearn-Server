@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema({
-  title: String,
+  title: { type: String },
   questions: [
     {
       question: String,
@@ -9,7 +9,7 @@ const quizSchema = new mongoose.Schema({
       correctAnswer: String,
     },
   ],
-  passGrade: Number,
+  passGrade: { type: Number },
 });
 
 const QuizHTMLModel = mongoose.model("QuizHTML", quizSchema);

@@ -1,10 +1,11 @@
-import express from "express";
+  import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Admin } from "../models/Admin.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
+import ScoreQuizModel from "../models/ScoreQuizModel.js";
 dotenv.config();
 
 const router = express.Router();
