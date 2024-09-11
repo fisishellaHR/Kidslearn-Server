@@ -15,12 +15,7 @@ dotenv.config({ path: "./config/.env" });
 
 app.use(
   cors({
-    // origin: "https://kidslearn-client.vercel.app",
-    origin: [
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "https://kidslearn-client.vercel.app",
-    ],
+    origin: "https://kidslearn-client.vercel.app",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
@@ -43,7 +38,8 @@ app.use("/api/module", ModulesRouterHTML);
 app.use("/api/moduledua", ModulesRouterCSS);
 app.use("/api/questions/html", routerHTML); // Rute untuk QuizHTML
 app.use("/api/questions/css", routerCSS); // Rute untuk QuizCSS
-mongoose.connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(process.env.URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(process.env.PORT, () => {
