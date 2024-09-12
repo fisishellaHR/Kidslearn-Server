@@ -387,7 +387,7 @@ router.get("/getUsers", async(req, res) => {
     if(!allUsers){
       res.status(404).json({ ErrorMessage : 'Empty User' })
     }
-    res.json(200).json(allUsers)
+    res.status(200).json(allUsers)
   } catch (error) {
     res.status(500).json({ ErrorMessage : error.message })
   }
