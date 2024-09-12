@@ -7,10 +7,12 @@ const ScoreQuiz = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   quiz: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "QuizHTML",
-    ref: "QuizCSS",
+    // ref: "QuizHTML",
+    // ref: "QuizCSS",
+    refPath: 'quizModel',
     required: true,
   },
+  quizModel: { type: String, enum: ['QuizHTML', 'QuizCSS'] },
   passGrade: { type: Boolean },
   answers: [
     {
