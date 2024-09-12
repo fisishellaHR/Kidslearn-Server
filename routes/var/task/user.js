@@ -396,7 +396,8 @@ router.get("/getUsers", async(req, res) => {
 router.get("/getUserByUsername", async (req, res) => {
   const { username } = req.query; // --> change from username to userId
   try {
-    const user = await ScoreQuizModel.findOne({ username: username })
+    const detailUser = await User.findOne({ username: username })
+    const user = await ScoreQuizModel.findOne({ user: detailUser._id })
       .populate("user", "username email")
       .populate("quiz", "title passGrade");
 
