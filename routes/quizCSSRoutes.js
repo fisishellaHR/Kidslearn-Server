@@ -45,7 +45,6 @@ router.get("/allScores", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 router.post("/:quizId/submit", async (req, res) => {
   const { email, quizId, userAnswers } = req.body;
 
@@ -69,7 +68,7 @@ router.post("/:quizId/submit", async (req, res) => {
       scoreUser = new ScoreQuizModel({
         user: user._id,
         quiz: quizId,
-        answers: [], // Initialize answers as an empty array
+        answers: [],
       });
     }
 
@@ -94,17 +93,14 @@ router.post("/:quizId/submit", async (req, res) => {
     const percentageScore = (score / quiz.questions.length) * 100;
     const passed = percentageScore >= quiz.passGrade;
 
-    // Store each answer
     scoreUser.answers = userAnswers.map((answerObj) => ({
-      questionId: quiz.questions[answerObj.questionIndex]._id, // Ensure question ID is available
+      questionId: quiz.questions[answerObj.questionIndex]._id,
       answer: answerObj.answer,
     }));
-
-    // Update experiment number and score
     scoreUser.experiment = scoreUser.experiment ? scoreUser.experiment + 1 : 1;
     scoreUser.score = percentageScore;
 
-    await scoreUser.save(); // Ensure save is called
+    await scoreUser.save();
 
     res.status(200).json({
       message: passed
