@@ -8,6 +8,7 @@ const ScoreQuiz = new Schema({
   quiz: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "QuizHTML",
+    ref: "QuizCSS",
     required: true,
   },
   passGrade: { type: Boolean },
@@ -20,7 +21,6 @@ const ScoreQuiz = new Schema({
   experiment: { type: Number },
   score: { type: Number },
 });
-
 
 const ScoreQuizModel = mongoose.model("ScoreQuizModel", ScoreQuiz);
 
