@@ -1,5 +1,7 @@
 import express from "express";
 import QuizCSSModel from "../models/quizduaModel.js"; // Model untuk QuizCSSModel
+import { User } from "../models/User.js";
+import ScoreQuizModel from "../models/ScoreQuizModel.js";
 
 const router = express.Router();
 
@@ -51,7 +53,7 @@ router.post("/:quizId/submit", async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    const quiz = await QuizHTMLModel.findOne({ _id: quizId });
+    const quiz = await QuizCSSModel.findOne({ _id: quizId });
 
     if (!quiz) {
       return res.status(404).json({ message: "Quiz Not Found!" });
