@@ -436,4 +436,21 @@ router.patch("/updateUser", async (req, res) => {
     return res.status(400).json({ message: "terjadi kesalahan" });
   }
 });
+
+// Route untuk mendapatkan semua pengguna dengan username dan suggestions mereka
+router.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find({}, "username suggestions"); // Hanya ambil username dan suggestions
+
+    if (!users.length) {
+      return res.status(404).json({ message: "Tidak ada pengguna ditemukan" });
+    }
+
+    return res.json(users);
+  } catch (error) {
+    console.error("Error getting all users:", error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
 export { router as UserRouter };
