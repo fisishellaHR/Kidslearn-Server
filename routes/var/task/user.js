@@ -410,12 +410,9 @@ router.get("/getUserByUsername", async (req, res) => {
         score: user.score,
         experiment: user.experiment,
       });
-    } else if (!user) {
-      const personal = await User.findOne({ username: username });
-      res.json(personal);
     } else {
       res.status(404).json({ message: "User not found" });
-    }
+    } 
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error", error });
