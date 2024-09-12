@@ -45,12 +45,13 @@ router.get("/allScores", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 router.post("/:quizId/submit", async (req, res) => {
   const { email, quizId, userAnswers } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    const quiz = await QuizCSSModel.findOne({ _id: quizId });
+    const quiz = await QuizHTMLModel.findOne({ _id: quizId });
 
     if (!quiz) {
       return res.status(404).json({ message: "Quiz Not Found!" });
@@ -68,7 +69,7 @@ router.post("/:quizId/submit", async (req, res) => {
       scoreUser = new ScoreQuizModel({
         user: user._id,
         quiz: quizId,
-        answers: [],
+        answers: [], // Initialize answers as an empty array
       });
     }
 
@@ -93,14 +94,17 @@ router.post("/:quizId/submit", async (req, res) => {
     const percentageScore = (score / quiz.questions.length) * 100;
     const passed = percentageScore >= quiz.passGrade;
 
+    // Store each answer
     scoreUser.answers = userAnswers.map((answerObj) => ({
-      questionId: quiz.questions[answerObj.questionIndex]._id,
+      questionId: quiz.questions[answerObj.questionIndex]._id, // Ensure question ID is available
       answer: answerObj.answer,
     }));
+
+    // Update experiment number and score
     scoreUser.experiment = scoreUser.experiment ? scoreUser.experiment + 1 : 1;
     scoreUser.score = percentageScore;
 
-    await scoreUser.save();
+    await scoreUser.save(); // Ensure save is called
 
     res.status(200).json({
       message: passed
