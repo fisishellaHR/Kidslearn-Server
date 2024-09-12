@@ -270,6 +270,7 @@ router.post("/submitresult", async (req, res) => {
       const scoreQuiz = new ScoreQuizModel({
         user: user._id,
         quiz: quizId,
+        quiz
       });
 
       await scoreQuiz.save();

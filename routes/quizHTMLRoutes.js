@@ -71,7 +71,8 @@ router.post("/:quizId/submit", async (req, res) => {
       scoreUser = new ScoreQuizModel({
         user: user._id,
         quiz: quizId,
-        answers: [], // Initialize answers as an empty array
+        answers: [], // Initialize answers as an empty array,
+        quizModel: 'QuizHTML'
       });
     }
 
@@ -105,6 +106,7 @@ router.post("/:quizId/submit", async (req, res) => {
     // Update experiment number and score
     scoreUser.experiment = scoreUser.experiment ? scoreUser.experiment + 1 : 1;
     scoreUser.score = percentageScore;
+    scoreUser.quizModel = 'QuizHTML';
 
     await scoreUser.save(); // Ensure save is called
 

@@ -72,6 +72,7 @@ router.post("/:quizId/submit", async (req, res) => {
         user: user._id,
         quiz: quizId,
         answers: [], // Initialize answers as an empty array
+        quizModel: 'QuizCSS'
       });
     }
 
@@ -105,6 +106,7 @@ router.post("/:quizId/submit", async (req, res) => {
     // Update experiment number and score
     scoreUser.experiment = scoreUser.experiment ? scoreUser.experiment + 1 : 1;
     scoreUser.score = percentageScore;
+    scoreUser.quizModel = 'QuizCSS';
 
     await scoreUser.save(); // Ensure save is called
 
